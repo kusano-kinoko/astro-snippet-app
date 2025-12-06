@@ -1,0 +1,13 @@
+module.exports = {
+  root: true,
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint", "astro"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:astro/recommended"
+  ],
+  overrides: [
+    { files: ["*.astro"], parser: "astro-eslint-parser" }
+  ]
+};

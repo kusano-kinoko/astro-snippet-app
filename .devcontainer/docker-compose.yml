@@ -1,0 +1,10 @@
+services:
+  astro:
+    build:
+      context: ..
+      dockerfile: ./Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    command: ["sh", "/workspace/.devcontainer/entrypoint.sh"]
+    ports:
+      - "4321:4321"
