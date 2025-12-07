@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["sleep", "infinity"]
+    working_dir: /workspace
+    tty: true
+    volumes:
+      - .:/workspace
+    ports:
+      - "4321:4321"

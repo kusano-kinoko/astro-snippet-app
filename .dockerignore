@@ -1,0 +1,9 @@
+node_modules
+.pnpm-store
+.vscode
+.git
+.gitignore
+Dockerfile
+npm-debug.log
+pnpm-debug.log
+yarn.lock
