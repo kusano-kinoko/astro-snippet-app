@@ -1,14 +1,24 @@
-version: "3.9"
-
 services:
-  app:
+  astro:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["sleep", "infinity"]
-    working_dir: /workspace
-    tty: true
+
+    # プロジェクト本体を bind mount（双方向）
     volumes:
-      - .:/workspace
+      - .:/workspace:cached
+
+      # 依存キャッシュは Docker volume に隔離（汚染防止）
+      - node_modules:/workspace/node_modules
+      - astro_cache:/workspace/.astro
+      - pnpm_store:/workspace/.pnpm-store
+
     ports:
       - "4321:4321"
+
+    command: ["sleep", "infinity"]
+
+volumes:
+  node_modules:
+  astro_cache:
+  pnpm_store:

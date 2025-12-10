@@ -1,9 +1,8 @@
+.git
 node_modules
 .pnpm-store
-.vscode
-.git
-.gitignore
-Dockerfile
+.astro
+dist
+.env
 npm-debug.log
 pnpm-debug.log
-yarn.lock
