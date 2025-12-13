@@ -4,6 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
 
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+
+
     # プロジェクト本体を bind mount（双方向）
     volumes:
       - .:/workspace:cached
