@@ -27,8 +27,10 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9 # 8でもOK。合わせたい版にして
 
       - name: Install
         run: pnpm install --frozen-lockfile
