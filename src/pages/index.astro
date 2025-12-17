@@ -1,21 +1,246 @@
 ---
+const highlights = [
+  {
+    title: "リアルタイムに書ける",
+    description: "Astro + Tailwind でサクッとスタイルを作り込める。実験もラクラク。",
+    icon: "⚡",
+  },
+  {
+    title: "コンポーネント志向",
+    description: "小さな断片を積み上げるように UI を組み立てて、再利用性も抜群。",
+    icon: "🧩",
+  },
+  {
+    title: "デプロイしやすい",
+    description: "静的出力で高速。Netlify や Vercel にそのまま流し込める。",
+    icon: "☁️",
+  },
+];
+
+const snippets = [
+  {
+    title: "ガラスカード",
+    body: "border + backdrop-blur でシンプルなガラス質感をすぐ表現できる。",
+    tags: ["UI", "Glassmorphism", "Utility"],
+  },
+  {
+    title: "ダークヒーロー",
+    body: "bg-gradient-to-br + drop-shadow で夜景っぽいヒーローを一瞬で作成。",
+    tags: ["Hero", "Gradient", "Tailwind"],
+  },
+  {
+    title: "ボタンの指針",
+    body: "transition + ring-offset でホバーもフォーカスも抜かりなし。",
+    tags: ["Button", "Accessibility"],
+  },
+];
 ---
-<html>
-  <body class="p-6">
-    <h1 class="text-3xl font-bold">Helloaaaa, でーはん</h1>
-    <p class="mt-4">これは でーはん専用 Astro スターターやで。</p>
-  </body>
-</html>
----
----
-<html lang="ja">
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Astro Snippet App</title>
+    <meta
+      name="description"
+      content="Astro と Tailwind でスニペットを遊ぶためのスターター。"
+    />
   </head>
-  <body class="p-6">
-    <h1 class="text-3xl font-bold">Hello, でーはん</h1>
-    <p class="mt-4">これは でーはん専用 Astro スターターやで。</p>
+  <body class="min-h-screen bg-slate-950 text-slate-100">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-indigo-900/40 via-slate-900 to-slate-950"></div>
+    <div class="absolute inset-x-10 top-20 -z-10 h-72 rounded-full bg-gradient-to-r from-indigo-600/30 via-fuchsia-500/20 to-cyan-500/30 blur-3xl"></div>
+
+    <header class="relative mx-auto max-w-6xl px-6 pt-12 pb-16">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+          <span class="grid h-10 w-10 place-items-center rounded-xl bg-indigo-500 text-xl shadow-lg shadow-indigo-500/40">
+            A
+          </span>
+          <span>Astro Snippet App</span>
+        </div>
+        <div class="hidden gap-2 md:flex">
+          <a
+            href="#snippets"
+            class="rounded-full bg-white/10 px-4 py-2 text-sm font-medium tracking-tight text-white ring-1 ring-white/10 transition hover:bg-white/20"
+            >スニペットを見る</a
+          >
+          <a
+            href="#"
+            class="rounded-full bg-indigo-500 px-4 py-2 text-sm font-semibold tracking-tight text-white shadow-lg shadow-indigo-500/40 transition hover:-translate-y-0.5 hover:shadow-indigo-500/60"
+            >スターターを入手</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="relative mx-auto max-w-6xl px-6 pb-20">
+      <section class="grid gap-10 rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-indigo-500/10 backdrop-blur">
+        <div class="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+          <div class="space-y-6">
+            <p class="inline-flex items-center gap-2 rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-100 ring-1 ring-indigo-400/40">
+              Tailwind Ready
+            </p>
+            <h1 class="text-4xl font-black leading-tight tracking-tight sm:text-5xl">
+              もう "Hello World" には戻れない。
+              <span class="bg-gradient-to-r from-indigo-300 via-fuchsia-300 to-cyan-200 bg-clip-text text-transparent">Tailwind</span>
+              が染み込んだ Astro スターター。
+            </h1>
+            <p class="max-w-2xl text-lg text-slate-200/90">
+              ひと目でテンションが上がる配色、余白、タイポグラフィ。Tailwind のユーティリティをそのまま
+              詰め込んだ例で、アイデアを即スケッチできる。
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                class="inline-flex items-center gap-2 rounded-full bg-indigo-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40 transition hover:-translate-y-0.5 hover:shadow-indigo-500/60"
+                href="#snippets"
+                >📚 サンプルを見る</a
+              >
+              <a
+                class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-indigo-200/50 hover:bg-white/20"
+                href="#"
+                >🚀 プロジェクトをクローン</a
+              >
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm text-slate-200/80 sm:grid-cols-3">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p class="text-3xl font-black text-indigo-200">0</p>
+                <p class="mt-1">設定レスで Tailwind すぐ使える</p>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p class="text-3xl font-black text-indigo-200">10min</p>
+                <p class="mt-1">コピペで UI 下ごしらえ完了</p>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p class="text-3xl font-black text-indigo-200">∞</p>
+                <p class="mt-1">ユーティリティで無限に組み替え</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="absolute -inset-6 rounded-[30px] bg-gradient-to-br from-indigo-500/30 via-fuchsia-400/20 to-cyan-300/25 blur-3xl"></div>
+            <div class="relative overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/70 shadow-xl backdrop-blur">
+              <div class="flex items-center gap-2 border-b border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-200/70">
+                <span class="h-3 w-3 rounded-full bg-rose-400"></span>
+                <span class="h-3 w-3 rounded-full bg-amber-300"></span>
+                <span class="h-3 w-3 rounded-full bg-emerald-400"></span>
+                <span class="ml-2 font-semibold text-white">tailwind.astro</span>
+              </div>
+              <div class="grid gap-3 bg-gradient-to-br from-slate-900 via-slate-900/80 to-slate-800 p-6">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner">
+                  <p class="text-xs uppercase tracking-[0.2em] text-indigo-200">Hero</p>
+                  <p class="mt-2 text-lg font-semibold text-white">bg-gradient-to-br</p>
+                  <p class="text-sm text-slate-200/80">余白と影を合わせて、存在感を簡単に。</p>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-sm text-slate-200/80">
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-3">backdrop-blur-xl</div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-3">ring-1 ring-white/15</div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-3">rounded-3xl</div>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-slate-950/60 p-4 font-mono text-xs text-indigo-100">
+                  <p>&lt;section class="bg-gradient-to-br from-indigo-600 to-slate-900"&gt;</p>
+                  <p class="pl-2">&lt;div class="backdrop-blur-xl border-white/10"&gt; ...</p>
+                  <p>&lt;/section&gt;</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-16 grid gap-10" id="snippets">
+        <div class="flex items-start justify-between gap-6">
+          <div class="space-y-2">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-indigo-200">FEATURES</p>
+            <h2 class="text-3xl font-black tracking-tight sm:text-4xl">Tailwind の旨味がわかる例</h2>
+            <p class="max-w-2xl text-slate-200/80">
+              ユーティリティをどう組み合わせるかを、短いサンプルで確認。細かい余白やカラーを変えて、
+              そのまま自分の UI に転用できるようにしてある。
+            </p>
+          </div>
+          <a
+            href="#"
+            class="hidden rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20 md:inline-flex"
+            >README を見る</a
+          >
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          {highlights.map(({ title, description, icon }) => (
+            <article class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-indigo-500/10">
+              <div class="h-12 w-12 rounded-2xl bg-white/10 text-2xl grid place-items-center shadow-inner shadow-indigo-500/20">
+                {icon}
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-xl font-bold">{title}</h3>
+                <p class="text-slate-200/80">{description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+          <div class="space-y-4 rounded-2xl border border-white/10 bg-gradient-to-br from-indigo-900/60 via-slate-950/80 to-slate-900/70 p-6 shadow-lg shadow-indigo-500/10">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-200">SNIPPETS</p>
+                <h3 class="text-2xl font-bold">ガラス質感カード</h3>
+              </div>
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/10">
+                tailwind-only
+              </span>
+            </div>
+            <p class="max-w-2xl text-slate-200/80">
+              border-white/10, bg-white/5, backdrop-blur-xl を重ねれば、情報カードに立体感が生まれる。影と
+              ラディアスを合わせれば十分。難しいカスタム CSS は不要。
+            </p>
+            <div class="grid gap-3 text-sm font-mono text-indigo-100">
+              <code class="rounded-xl border border-white/10 bg-slate-950/60 p-4">
+                &lt;div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl p-6"&gt;...&lt;/div&gt;
+              </code>
+              <code class="rounded-xl border border-white/10 bg-slate-950/60 p-4">
+                &lt;button class="bg-indigo-500 px-4 py-2 rounded-full text-white shadow hover:-translate-y-0.5" /&gt;
+              </code>
+            </div>
+          </div>
+
+          <div class="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-indigo-500/10">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold">ピックアップ</h3>
+              <span class="rounded-full bg-indigo-500/20 px-3 py-1 text-xs font-semibold text-indigo-50 ring-1 ring-indigo-300/40">
+                3 items
+              </span>
+            </div>
+            <div class="grid gap-3">
+              {snippets.map(({ title, body, tags }) => (
+                <article class="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <h4 class="text-base font-semibold">{title}</h4>
+                    <div class="flex gap-1">
+                      {tags.slice(0, 2).map((tag) => (
+                        <span class="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-semibold text-indigo-50 ring-1 ring-white/10">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <p class="mt-2 text-sm text-slate-200/80">{body}</p>
+                </article>
+              ))}
+            </div>
+            <button class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40 transition hover:-translate-y-0.5 hover:shadow-indigo-500/60">
+              もっと見る
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="relative mx-auto max-w-6xl px-6 pb-12 pt-10">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-200/70">
+        <p class="font-semibold text-white">Astro + Tailwind スターター</p>
+        <p class="mt-2">このままクローンして、好きな要素を伸ばしてみてね。</p>
+      </div>
+    </footer>
   </body>
 </html>
