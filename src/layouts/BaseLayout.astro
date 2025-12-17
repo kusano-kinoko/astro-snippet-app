@@ -1,0 +1,32 @@
+---
+import type { AstroComponentFactory } from "astro";
+import "../styles/global.css";
+
+const { title = "Astro Snippet Library", description = "Astro + Tailwind で作る静的スニペット集" } = Astro.props as {
+  title?: string;
+  description?: string;
+  children?: AstroComponentFactory;
+};
+---
+<!doctype html>
+<html lang="ja" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100 antialiased">
+    <div class="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-br from-indigo-900/40 via-slate-900 to-slate-950"></div>
+    <div class="pointer-events-none fixed inset-x-10 top-16 -z-10 h-72 rounded-full bg-gradient-to-r from-indigo-600/30 via-fuchsia-500/20 to-cyan-500/30 blur-3xl"></div>
+    <main class="mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-16 pt-10 sm:pt-14">
+      <slot />
+    </main>
+    <footer class="mx-auto max-w-6xl px-6 pb-10">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-200/80">
+        <p class="font-semibold text-white">Astro Snippet Library</p>
+        <p class="mt-2">CSV データを静的ビルドで読み込み、検索・コピーできるミニマル実装です。</p>
+      </div>
+    </footer>
+  </body>
+</html>

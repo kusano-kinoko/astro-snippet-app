@@ -1,0 +1,6 @@
+slug,title,description,category,type,tags,code,created_at,updated_at
+docker-basics,"Docker の基本","Docker の概念と最初のコマンド紹介","docker","howto","docker;container;intro","docker run hello-world","2025-01-01","2025-01-01"
+astro-routing,"Astro のルーティング","ファイルベースルーティングの仕組み","astro","snippet","astro;routing","// src/pages/about.astro を作成で /about にルーティング","2025-01-01","2025-01-01"
+wsl-setup,"WSL セットアップ","WSL2 を導入するための最小手順","wsl","howto","wsl;windows","wsl --install","2025-01-01","2025-01-01"
+tailwind-config,"TailwindCSS 基本設定","Astro + Tailwind の導入","astro","howto","tailwind;css","npx astro add tailwind","2025-01-01","2025-01-01"
+pnpm-basic,"pnpm 基本コマンド","install / add / remove を理解する","node","tips","pnpm;node","pnpm install","2025-01-01","2025-01-01"
