@@ -5,3 +5,4 @@ node_modules
 .DS_Store
 .astro
 dist/
+package-lock.json
