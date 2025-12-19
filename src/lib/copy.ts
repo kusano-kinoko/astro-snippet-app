@@ -29,6 +29,16 @@ const showToast = (message: string, variant: "success" | "error" = "success") =>
   }, 2000);
 };
 
+const writeWithClipboardApi = async (text: string) => {
+  if (!navigator.clipboard || !navigator.clipboard.writeText) return false;
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 const legacyCopy = (text: string) => {
   const textarea = document.createElement("textarea");
   textarea.value = text;
@@ -68,19 +78,7 @@ const handleCopyClick = async (button: HTMLButtonElement) => {
     }, duration);
   };
 
-  let copied = false;
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    try {
-      await navigator.clipboard.writeText(code);
-      copied = true;
-    } catch (error) {
-      copied = legacyCopy(code);
-    }
-  } else {
-    // Avoid awaiting before the legacy path so mobile browsers keep the user gesture.
-    copied = legacyCopy(code);
-  }
+  const copied = (await writeWithClipboardApi(code)) || legacyCopy(code);
 
   if (copied) {
     if (label) label.textContent = "Copied!";
