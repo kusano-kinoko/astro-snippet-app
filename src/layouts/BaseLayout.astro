@@ -8,6 +8,10 @@ const { title = "Astro Snippet Library", description = "Astro + Tailwind で作�
   description?: string;
   children?: AstroComponentFactory;
 };
+
+const resolveWithBase = (path: string) =>
+  path.startsWith("/") ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path;
+const copyScriptSrc = resolveWithBase(copyScript);
 ---
 <!doctype html>
 <html lang="ja" class="scroll-smooth">
@@ -29,6 +33,6 @@ const { title = "Astro Snippet Library", description = "Astro + Tailwind で作�
         <p class="mt-2">CSV データを静的ビルドで読み込み、検索・コピーできるミニマル実装です。</p>
       </div>
     </footer>
-    <script type="module" src={copyScript}></script>
+    <script type="module" src={copyScriptSrc}></script>
   </body>
 </html>

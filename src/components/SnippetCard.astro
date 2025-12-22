@@ -2,6 +2,8 @@
 import type { Snippet } from "../lib/csv";
 
 const { snippet } = Astro.props as { snippet: Snippet };
+
+const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 <article
   class="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-indigo-500/10 transition hover:-translate-y-0.5 hover:border-indigo-300/30 hover:shadow-indigo-500/30"
@@ -36,7 +38,7 @@ const { snippet } = Astro.props as { snippet: Snippet };
       <div class="flex gap-2">
         <a
           class="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20"
-          href={`/snippets/${snippet.slug}/`}
+          href={withBase(`/snippets/${snippet.slug}/`)}
         >
           詳細を見る
         </a>
