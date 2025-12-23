@@ -32,6 +32,6 @@ const buildTimestampLabel = buildTimestamp.toLocaleString("ja-JP", { timeZone: "
         <p class="mt-4 text-xs text-slate-200/60">Build: {buildTimestampLabel} (JST)</p>
       </div>
     </footer>
-    <script type="module" src="/scripts/copy.client.ts"></script>
+    <script src={`${import.meta.env.BASE_URL}scripts/copy.client.js`}></script>
   </body>
 </html>
