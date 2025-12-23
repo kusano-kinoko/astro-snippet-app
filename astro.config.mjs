@@ -3,7 +3,7 @@ import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  site: "https://kusano-kinoko.github.io",
+  site: "https://russulasp.github.io",
   base: "/astro-snippet-app/",
 
   vite: {
