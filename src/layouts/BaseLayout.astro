@@ -1,6 +1,7 @@
 ---
 import type { AstroComponentFactory } from "astro";
 import "../styles/global.css";
+import copyScriptUrl from "../lib/copy.ts?url";
 
 const { title = "Astro Snippet Library", description = "Astro + Tailwind で作る静的スニペット集" } = Astro.props as {
   title?: string;
@@ -29,6 +30,6 @@ const { title = "Astro Snippet Library", description = "Astro + Tailwind で作�
         <p class="mt-2">CSV データを静的ビルドで読み込み、検索・コピーできるミニマル実装です。</p>
       </div>
     </footer>
-    <script type="module" src={Astro.resolve("../lib/copy")}></script>
+    <script type="module" src={copyScriptUrl}></script>
   </body>
 </html>
