@@ -7,6 +7,8 @@ const { title = "Astro Snippet Library", description = "Astro + Tailwind で作�
   description?: string;
   children?: AstroComponentFactory;
 };
+const buildTimestamp = new Date();
+const buildTimestampLabel = buildTimestamp.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
 
 ---
 <!doctype html>
@@ -27,6 +29,7 @@ const { title = "Astro Snippet Library", description = "Astro + Tailwind で作�
       <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-slate-200/80">
         <p class="font-semibold text-white">Astro Snippet Library</p>
         <p class="mt-2">CSV データを静的ビルドで読み込み、検索・コピーできるミニマル実装です。</p>
+        <p class="mt-4 text-xs text-slate-200/60">Build: {buildTimestampLabel} (JST)</p>
       </div>
     </footer>
     <script type="module" src="/scripts/copy.client.ts"></script>
