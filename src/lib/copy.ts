@@ -64,8 +64,15 @@ const manualPromptFallback = (text: string) => {
   window.prompt("コピーできない場合は、以下のテキストを選択してコピーしてください", text);
 };
 
+const getCopyTarget = (button: HTMLButtonElement) => {
+  if (button.dataset.copyCode) return button.dataset.copyCode;
+  const codeBlock = button.previousElementSibling?.textContent?.trim();
+  if (codeBlock) return codeBlock;
+  return "";
+};
+
 const handleCopyClick = async (button: HTMLButtonElement) => {
-  const code = button.dataset.copyCode ?? "";
+  const code = getCopyTarget(button);
   const label = button.querySelector<HTMLElement>(".copy-label");
   const originalLabel = label?.textContent ?? "コピー";
 
@@ -77,6 +84,13 @@ const handleCopyClick = async (button: HTMLButtonElement) => {
       if (label) label.textContent = originalLabel;
     }, duration);
   };
+
+  if (!code) {
+    console.warn("No copy target found for copy button", button);
+    showToast("コピー対象のテキストが見つかりません", "error");
+    resetLabel(2500);
+    return;
+  }
 
   const copied = (await writeWithClipboardApi(code)) || legacyCopy(code);
 
@@ -91,6 +105,7 @@ const handleCopyClick = async (button: HTMLButtonElement) => {
     return;
   }
 
+  console.warn("Copy failed for button", button);
   showToast("コピーできませんでした。長押しで選択・コピーしてください。", "error");
   if (label) label.textContent = "コピーに失敗";
   resetLabel(2500);
