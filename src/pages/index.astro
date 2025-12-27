@@ -145,14 +145,14 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
 
   <script type="module">
     document.addEventListener("DOMContentLoaded", () => {
-      const searchInput = document.querySelector<HTMLInputElement>("#search");
-      const categorySelect = document.querySelector<HTMLSelectElement>("#category");
-      const typeSelect = document.querySelector<HTMLSelectElement>("#type");
-      const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-snippet]"));
-      const resultCount = document.querySelector<HTMLElement>("#result-count");
-      const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-view-toggle]"));
-      const cardList = document.querySelector<HTMLElement>("#snippet-list");
-      const tableList = document.querySelector<HTMLElement>("#snippet-table");
+      const searchInput = document.querySelector("#search");
+      const categorySelect = document.querySelector("#category");
+      const typeSelect = document.querySelector("#type");
+      const cards = Array.from(document.querySelectorAll("[data-snippet]"));
+      const resultCount = document.querySelector("#result-count");
+      const viewButtons = Array.from(document.querySelectorAll("[data-view-toggle]"));
+      const cardList = document.querySelector("#snippet-list");
+      const tableList = document.querySelector("#snippet-table");
 
       const applyFilters = () => {
         const keyword = searchInput?.value.trim().toLowerCase() ?? "";
@@ -179,7 +179,7 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
         }
       };
 
-      const setView = (view: "card" | "table") => {
+      const setView = (view) => {
         cardList?.classList.toggle("hidden", view !== "card");
         tableList?.classList.toggle("hidden", view !== "table");
         viewButtons.forEach((button) => {
