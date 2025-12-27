@@ -6,17 +6,38 @@ import { loadSnippets } from "../lib/csv";
 const snippets = loadSnippets();
 const categories = Array.from(new Set(snippets.map((snippet) => snippet.category)));
 const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
+const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 ---
 <BaseLayout title="Astro Snippet Library" description="CSV から読み込むシンプルなスニペット集">
-  <section class="grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-indigo-500/10">
+  <section class="grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 pb-20 shadow-xl shadow-indigo-500/10 sm:pb-6">
     <div class="flex flex-wrap items-center gap-4">
       <div>
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-200">Search</p>
         <h2 class="text-2xl font-bold">スニペット検索</h2>
       </div>
-      <div class="ml-auto flex flex-wrap gap-3 text-sm text-slate-200/80">
+      <div class="ml-auto flex flex-wrap items-center gap-3 text-sm text-slate-200/80">
         <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">{snippets.length} 件</span>
         <span id="result-count" class="rounded-full bg-indigo-500/20 px-3 py-1 ring-1 ring-indigo-400/40">{snippets.length} 件ヒット</span>
+        <div class="hidden items-center gap-2 rounded-full border border-white/10 bg-slate-950/60 p-1 sm:inline-flex">
+          <button
+            type="button"
+            data-view-toggle
+            data-view="card"
+            aria-pressed="true"
+            class="rounded-full px-3 py-1 text-xs font-semibold text-white transition"
+          >
+            カード表示
+          </button>
+          <button
+            type="button"
+            data-view-toggle
+            data-view="table"
+            aria-pressed="false"
+            class="rounded-full px-3 py-1 text-xs font-semibold text-slate-200/80 transition"
+          >
+            テーブル表示
+          </button>
+        </div>
       </div>
     </div>
     <div class="grid gap-3 sm:grid-cols-[2fr_1fr_1fr]">
@@ -54,7 +75,73 @@ const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
         <SnippetCard snippet={snippet} />
       ))}
     </div>
+
+    <div id="snippet-table" class="hidden">
+      <div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/40">
+        <table class="min-w-full text-left text-sm text-slate-200/85">
+          <thead class="bg-white/5 text-xs uppercase tracking-[0.2em] text-indigo-200">
+            <tr>
+              <th scope="col" class="px-4 py-3">Title</th>
+              <th scope="col" class="px-4 py-3">Category</th>
+              <th scope="col" class="px-4 py-3">Type</th>
+              <th scope="col" class="px-4 py-3">Updated</th>
+              <th scope="col" class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5">
+            {snippets.map((snippet) => (
+              <tr
+                class="transition hover:bg-white/5"
+                data-snippet
+                data-title={snippet.title.toLowerCase()}
+                data-description={snippet.description.toLowerCase()}
+                data-tags={snippet.tags.join(" ").toLowerCase()}
+                data-code={snippet.code.toLowerCase()}
+                data-category={snippet.category}
+                data-type={snippet.type}
+                data-display="table-row"
+              >
+                <td class="px-4 py-3 font-semibold text-white">{snippet.title}</td>
+                <td class="px-4 py-3 text-indigo-100/90">{snippet.category}</td>
+                <td class="px-4 py-3">{snippet.type}</td>
+                <td class="px-4 py-3 text-slate-300/80">{snippet.updated_at}</td>
+                <td class="px-4 py-3 text-right">
+                  <a
+                    class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20"
+                    href={withBase(`/snippets/${snippet.slug}/`)}
+                  >
+                    詳細を見る
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </section>
+
+  <div class="fixed inset-x-0 bottom-4 z-20 mx-auto flex w-[calc(100%-2rem)] max-w-sm items-center justify-center gap-2 rounded-full border border-white/10 bg-slate-950/80 p-2 text-xs font-semibold text-white shadow-lg shadow-indigo-500/30 backdrop-blur sm:hidden">
+    <button
+      type="button"
+      data-view-toggle
+      data-view="card"
+      aria-pressed="true"
+      class="flex-1 rounded-full px-3 py-2 text-center transition"
+    >
+      カード
+    </button>
+    <button
+      type="button"
+      data-view-toggle
+      data-view="table"
+      aria-pressed="false"
+      class="flex-1 rounded-full px-3 py-2 text-center text-slate-200/80 transition"
+    >
+      テーブル
+    </button>
+  </div>
 
   <script type="module">
     document.addEventListener("DOMContentLoaded", () => {
@@ -63,6 +150,9 @@ const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
       const typeSelect = document.querySelector<HTMLSelectElement>("#type");
       const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-snippet]"));
       const resultCount = document.querySelector<HTMLElement>("#result-count");
+      const viewButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-view-toggle]"));
+      const cardList = document.querySelector<HTMLElement>("#snippet-list");
+      const tableList = document.querySelector<HTMLElement>("#snippet-table");
 
       const applyFilters = () => {
         const keyword = searchInput?.value.trim().toLowerCase() ?? "";
@@ -79,7 +169,8 @@ const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
           const matchesCategory = category ? card.dataset.category === category : true;
           const matchesType = type ? card.dataset.type === type : true;
           const show = matchesKeyword && matchesCategory && matchesType;
-          card.style.display = show ? "flex" : "none";
+          const display = card.dataset.display ?? "block";
+          card.style.display = show ? display : "none";
           if (show) visible += 1;
         });
 
@@ -88,9 +179,28 @@ const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
         }
       };
 
-      [searchInput, categorySelect, typeSelect].forEach((el) => el?.addEventListener("input", applyFilters));
-      applyFilters();
+      const setView = (view: "card" | "table") => {
+        cardList?.classList.toggle("hidden", view !== "card");
+        tableList?.classList.toggle("hidden", view !== "table");
+        viewButtons.forEach((button) => {
+          const isActive = button.dataset.view === view;
+          button.setAttribute("aria-pressed", isActive.toString());
+          button.classList.toggle("bg-indigo-500/30", isActive);
+          button.classList.toggle("text-white", isActive);
+          button.classList.toggle("text-slate-200/80", !isActive);
+        });
+      };
 
+      [searchInput, categorySelect, typeSelect].forEach((el) => el?.addEventListener("input", applyFilters));
+      viewButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const view = button.dataset.view === "table" ? "table" : "card";
+          setView(view);
+        });
+      });
+
+      applyFilters();
+      setView("card");
     });
   </script>
 </BaseLayout>
