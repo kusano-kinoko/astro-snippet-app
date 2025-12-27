@@ -7,6 +7,17 @@ const snippets = loadSnippets();
 const categories = Array.from(new Set(snippets.map((snippet) => snippet.category)));
 const types = Array.from(new Set(snippets.map((snippet) => snippet.type)));
 const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+const modalSnippets = snippets.map((snippet) => ({
+  slug: snippet.slug,
+  title: snippet.title,
+  description: snippet.description,
+  category: snippet.category,
+  type: snippet.type,
+  tags: snippet.tags,
+  code: snippet.code,
+  created_at: snippet.created_at,
+  updated_at: snippet.updated_at,
+}));
 ---
 <BaseLayout title="Astro Snippet Library" description="CSV から読み込むシンプルなスニペット集">
   <section class="grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 pb-20 shadow-xl shadow-indigo-500/10 sm:pb-6">
@@ -109,6 +120,8 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
                   <a
                     class="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20"
                     href={withBase(`/snippets/${snippet.slug}/`)}
+                    data-snippet-open
+                    data-snippet-slug={snippet.slug}
                   >
                     詳細を見る
                     <span aria-hidden="true">→</span>
@@ -143,8 +156,71 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
     </button>
   </div>
 
-  <script type="module">
-    document.addEventListener("DOMContentLoaded", () => {
+  <script type="application/json" id="snippet-data" set:html={JSON.stringify(modalSnippets)}></script>
+
+  <dialog
+    id="snippet-modal"
+    class="w-full max-w-4xl rounded-3xl border border-white/10 bg-slate-950/95 p-0 text-slate-100 shadow-2xl shadow-indigo-500/30 backdrop:bg-slate-950/70 backdrop:backdrop-blur"
+  >
+    <div class="flex flex-col gap-6 p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+        <div>
+          <p id="snippet-modal-category" class="text-xs uppercase tracking-[0.2em] text-indigo-200"></p>
+          <h2 id="snippet-modal-title" class="mt-2 text-2xl font-bold text-white sm:text-3xl"></h2>
+          <p id="snippet-modal-description" class="mt-2 text-sm text-slate-200/80 sm:text-base"></p>
+        </div>
+        <button
+          type="button"
+          data-modal-close
+          class="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20"
+        >
+          閉じる
+        </button>
+      </div>
+
+      <div class="flex flex-wrap gap-2 text-xs text-slate-200/80">
+        <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">タイプ: <span id="snippet-modal-type"></span></span>
+        <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">作成日 <span id="snippet-modal-created"></span></span>
+        <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">更新日 <span id="snippet-modal-updated"></span></span>
+      </div>
+
+      <div class="grid gap-4 rounded-2xl border border-white/10 bg-slate-950/60 p-5">
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-sm font-semibold text-white">code</p>
+          <button
+            class="copy-btn inline-flex items-center gap-2 rounded-full bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/40 transition hover:-translate-y-0.5 hover:shadow-indigo-500/60"
+            type="button"
+            id="snippet-modal-copy"
+            data-copy-code=""
+          >
+            <span aria-hidden="true">📋</span>
+            <span class="copy-label">コピー</span>
+          </button>
+        </div>
+        <pre
+          id="snippet-modal-code"
+          class="whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-900/80 p-4 text-sm font-mono text-indigo-100"
+        ></pre>
+        <div id="snippet-modal-tags" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+        <p class="text-slate-200/70">詳細ページにもアクセスできます。</p>
+        <a
+          id="snippet-modal-link"
+          class="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition hover:border-indigo-200/50 hover:bg-white/20"
+          href={withBase("/")}
+        >
+          詳細ページへ
+        </a>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" define:vars={{ baseUrl: import.meta.env.BASE_URL }}>
+    const initPage = () => {
+      if (document.body.dataset.snippetPageBound === "true") return;
+      document.body.dataset.snippetPageBound = "true";
       const searchInput = document.querySelector("#search");
       const categorySelect = document.querySelector("#category");
       const typeSelect = document.querySelector("#type");
@@ -199,8 +275,81 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
         });
       });
 
+      const snippetModal = document.querySelector("#snippet-modal");
+      const snippetDataElement = document.querySelector("#snippet-data");
+      const modalTitle = document.querySelector("#snippet-modal-title");
+      const modalDescription = document.querySelector("#snippet-modal-description");
+      const modalCategory = document.querySelector("#snippet-modal-category");
+      const modalType = document.querySelector("#snippet-modal-type");
+      const modalCreated = document.querySelector("#snippet-modal-created");
+      const modalUpdated = document.querySelector("#snippet-modal-updated");
+      const modalCode = document.querySelector("#snippet-modal-code");
+      const modalTags = document.querySelector("#snippet-modal-tags");
+      const modalCopy = document.querySelector("#snippet-modal-copy");
+      const modalLink = document.querySelector("#snippet-modal-link");
+      const modalClose = document.querySelector("[data-modal-close]");
+
+      const snippets = snippetDataElement?.textContent ? JSON.parse(snippetDataElement.textContent) : [];
+      const snippetMap = new Map(snippets.map((snippet) => [snippet.slug, snippet]));
+
+      const openModal = (slug) => {
+        const snippet = snippetMap.get(slug);
+        if (!snippet || !snippetModal) return;
+
+        if (modalTitle) modalTitle.textContent = snippet.title;
+        if (modalDescription) modalDescription.textContent = snippet.description;
+        if (modalCategory) modalCategory.textContent = snippet.category;
+        if (modalType) modalType.textContent = snippet.type;
+        if (modalCreated) modalCreated.textContent = snippet.created_at;
+        if (modalUpdated) modalUpdated.textContent = snippet.updated_at;
+        if (modalCode) modalCode.textContent = snippet.code;
+        if (modalCopy) modalCopy.dataset.copyCode = snippet.code;
+        if (modalLink) modalLink.href = `${baseUrl}snippets/${snippet.slug}/`;
+
+        if (modalTags) {
+          modalTags.innerHTML = "";
+          snippet.tags.forEach((tag) => {
+            const tagEl = document.createElement("span");
+            tagEl.className =
+              "rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-indigo-50 ring-1 ring-white/10";
+            tagEl.textContent = tag;
+            modalTags.appendChild(tagEl);
+          });
+        }
+
+        document.body.classList.add("overflow-hidden");
+        snippetModal.showModal();
+      };
+
+      const closeModal = () => {
+        if (!snippetModal) return;
+        snippetModal.close();
+      };
+
+      const openButtons = Array.from(document.querySelectorAll("[data-snippet-open]"));
+      openButtons.forEach((button) => {
+        if (button.dataset.modalBound === "true") return;
+        button.dataset.modalBound = "true";
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          const slug = button.dataset.snippetSlug;
+          if (slug) openModal(slug);
+        });
+      });
+
+      modalClose?.addEventListener("click", closeModal);
+      snippetModal?.addEventListener("click", (event) => {
+        if (event.target === snippetModal) closeModal();
+      });
+      snippetModal?.addEventListener("close", () => {
+        document.body.classList.remove("overflow-hidden");
+      });
+
       applyFilters();
       setView("card");
-    });
+    };
+
+    document.addEventListener("DOMContentLoaded", initPage);
+    document.addEventListener("astro:page-load", initPage);
   </script>
 </BaseLayout>
